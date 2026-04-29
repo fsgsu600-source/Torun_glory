@@ -1,0 +1,29 @@
+<h1>Admin Panel</h1>
+<div id="orders"></div>
+
+<script>
+async function load(){
+  const res = await fetch('http://localhost:5000/api/admin/orders');
+  const data = await res.json();
+
+  document.getElementById('orders').innerHTML = data.map(o=>
+    `<div>
+      ${o.guildId} - ${o.status}
+      <button onclick="approve('${o._id}')">Approve</button>
+      <button onclick="reject('${o._id}')">Reject</button>
+    </div>`
+  ).join('');
+}
+
+async function approve(id){
+  await fetch('http://localhost:5000/api/admin/approve/'+id,{method:'POST'});
+  load();
+}
+
+async function reject(id){
+  await fetch('http://localhost:5000/api/admin/reject/'+id,{method:'POST'});
+  load();
+}
+
+load();
+</script>
